@@ -6,6 +6,5 @@ lichess_bot_auto_logs/*
 .vs/*
 *.pgn
 *.log
-*.txt
 TEMP/*
 config.yml
