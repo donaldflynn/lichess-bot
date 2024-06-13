@@ -1,6 +1,6 @@
 # Lichess Bot
 
-The backend of a [lichess bot](https://lichess.org/@/Bot5551), that's running a leela chess engine, trained to play like me based on [my lichess games](lichess/@/Red5551).
+The backend of a [lichess bot](https://lichess.org/@/Bot5551), that's running a leela chess engine, trained to play like me based on [my lichess games](https://lichess.org/@/Red5551).
 The training was done using [maia-individual](https://github.com/donaldflynn/maia-individual), and the hosting is done using lichess-bot, which this repositry is forked from.
 
 ## Performance
