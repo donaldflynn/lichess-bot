@@ -40,10 +40,10 @@ RUN pip3 install --no-cache-dir meson ninja
 # This step takes about 30 mins
 RUN ./build.sh -Ddefault_library=static
 
-COPY requirements.txt /app/lichess-bot/requirements.txt
+COPY ../../requirements.txt /app/lichess-bot/requirements.txt
 RUN pip3 install --no-cache-dir -r /app/lichess-bot/requirements.txt
 
-COPY . /app/
+COPY ../.. /app/
 
 RUN mv /app/lc0/build/release/lc0 /app/engines
 
