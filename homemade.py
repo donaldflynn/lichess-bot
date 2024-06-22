@@ -44,7 +44,12 @@ class Hybrid(ExampleEngine):
         super(Hybrid, self).__exit__(exc_type, exc_val, exc_tb)
 
     def search(self, board: chess.Board, *args: HOMEMADE_ARGS_TYPE) -> PlayResult:
-        return self._stockfish_engine.play(board, chess.engine.Limit(time=0.1))
+        info_list = self._leela_engine.analyse(board, chess.engine.Limit(time=2), multipv=MAIA_CANDIDATE_MOVES)
+        moves_list = [info['pv'][0] for info in info_list]
+        logger.info("Candidate moves received from maia: " + ", ".join([str(move) for move in moves_list]))
+        play_result = self._stockfish_engine.play(board, chess.engine.Limit(time=0.1), root_moves=moves_list)
+        logger.info("Final move decided from stockfish: %s", str(play_result.move))
+        return play_result
 
 
 # Bot names and ideas from tom7's excellent eloWorld video

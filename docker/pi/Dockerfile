@@ -118,4 +118,4 @@ COPY ../.. /app/
 COPY --from=leela-compiler /app/lc0/build/release/lc0 /app/engines/lc0
 
 
-ENTRYPOINT ["python3", "lichess-bot.py", "-v"]
+ENTRYPOINT ["python3", "lichess-bot.py"]
