@@ -1,5 +1,5 @@
 # Use the official Ubuntu 22.04 LTS image as the base image
-FROM ubuntu:22.04
+FROM ubuntu:22.04 as compiler
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Set the working directory in the container
@@ -40,12 +40,33 @@ RUN pip3 install --no-cache-dir meson ninja
 # This step takes about 30 mins
 RUN ./build.sh -Ddefault_library=static
 
+RUN mkdir /app/engines
+RUN mv /app/lc0/build/release/lc0 /app/engines
+
+# Use the official Ubuntu 22.04 LTS image as the base image
+FROM ubuntu:22.04
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install essential packages
+RUN apt-get -y update && \
+    apt-get install -y \
+    python3 \
+    python3-pip \
+    nano \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=compiler /usr /usr
+
+WORKDIR /app/
+
 COPY ../../requirements.txt /app/lichess-bot/requirements.txt
 RUN pip3 install --no-cache-dir -r /app/lichess-bot/requirements.txt
 
 COPY ../.. /app/
+COPY --from=compiler /app/engines/lc0 /app/engines/lc0
 
-RUN mv /app/lc0/build/release/lc0 /app/engines
 
-WORKDIR /app/
 ENTRYPOINT ["python3", "lichess-bot.py", "-v"]

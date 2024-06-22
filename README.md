@@ -19,3 +19,5 @@ The training was done using [maia-individual](https://github.com/donaldflynn/mai
 ### For raspberry pi:
 1. Build docker container with `scripts/build_docker_pi.bat`
 2. If you've not done multi-arch builds before on your machine, you may need to set it up with: ```docker run --rm --privileged multiarch/qemu-user-static --reset -p yes```
+3. Pull the docker container on the raspberry pi
+4. Run the docker container and load in the lichess API token by setting the environment variable `LICHESS_BOT_TOKEN`
