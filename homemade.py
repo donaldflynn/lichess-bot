@@ -19,7 +19,9 @@ logger = logging.getLogger(__name__)
 
 
 LEELA_PATH = "/app/engines/lc0"
+STOCKFISH_PATH = "/app/engines/stockfish"
 
+MAIA_CANDIDATE_MOVES = 3
 
 class ExampleEngine(MinimalEngine):
     """An example engine that all homemade engines inherit."""
@@ -31,17 +33,18 @@ class Hybrid(ExampleEngine):
     def __init__(self, *args, **kwargs):
         super(Hybrid, self).__init__(*args, **kwargs)
         self._leela_engine = chess.engine.SimpleEngine.popen_uci(LEELA_PATH)
-
+        self._stockfish_engine = chess.engine.SimpleEngine.popen_uci(STOCKFISH_PATH)
     def __exit__(self, exc_type, exc_val, exc_tb):
         """
         Wrap the exit method of ExampleEngine to ensure we exit the engines properly in case of an
         exception etc
         """
         self._leela_engine.__exit__(exc_type, exc_val, exc_tb)
+        self._stockfish_engine.__exit__(exc_type, exc_val, exc_tb)
         super(Hybrid, self).__exit__(exc_type, exc_val, exc_tb)
 
     def search(self, board: chess.Board, *args: HOMEMADE_ARGS_TYPE) -> PlayResult:
-        return self._leela_engine.play(board, chess.engine.Limit(time=0.1))
+        return self._stockfish_engine.play(board, chess.engine.Limit(time=0.1))
 
 
 # Bot names and ideas from tom7's excellent eloWorld video
