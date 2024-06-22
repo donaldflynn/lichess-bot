@@ -1,4 +1,3 @@
-*.yml
 **/__pycache__
 !/engines/README.md
 lichess_bot_auto_logs/*
@@ -7,4 +6,3 @@ lichess_bot_auto_logs/*
 *.pgn
 *.log
 TEMP/*
-config.yml

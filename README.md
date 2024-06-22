@@ -14,3 +14,8 @@ The training was done using [maia-individual](https://github.com/donaldflynn/mai
 - [Play the bot (assuming there's an instance running somewhere)](https://lichess.org?user=Bot5551#friend)
 - [Original lichess-bot repo](https://github.com/lichess-bot-devs/lichess-bot)
 - [Maia project](https://maiachess.com/)
+
+## Running the code
+### For raspberry pi:
+1. Build docker container with `scripts/build_docker_pi.bat`
+2. If you've not done multi-arch builds before on your machine, you may need to set it up with: ```docker run --rm --privileged multiarch/qemu-user-static --reset -p yes```
