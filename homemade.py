@@ -32,6 +32,14 @@ class Hybrid(ExampleEngine):
         super(Hybrid, self).__init__(*args, **kwargs)
         self._leela_engine = chess.engine.SimpleEngine.popen_uci(LEELA_PATH)
 
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Wrap the exit method of ExampleEngine to ensure we exit the engines properly in case of an
+        exception etc
+        """
+        self._leela_engine.__exit__(exc_type, exc_val, exc_tb)
+        super(Hybrid, self).__exit__(exc_type, exc_val, exc_tb)
+
     def search(self, board: chess.Board, *args: HOMEMADE_ARGS_TYPE) -> PlayResult:
         return self._leela_engine.play(board, chess.engine.Limit(time=0.1))
 
