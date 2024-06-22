@@ -5,6 +5,7 @@ With these classes, bot makers will not have to implement the UCI or XBoard inte
 """
 import chess
 from chess.engine import PlayResult, Limit
+import chess.engine
 import random
 from lib.engine_wrapper import MinimalEngine
 from lib.types import MOVE, HOMEMADE_ARGS_TYPE
@@ -17,10 +18,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+LEELA_PATH = "/app/engines/lc0"
+
+
 class ExampleEngine(MinimalEngine):
     """An example engine that all homemade engines inherit."""
 
     pass
+
+
+class Hybrid(ExampleEngine):
+    def __init__(self, *args, **kwargs):
+        super(Hybrid, self).__init__(*args, **kwargs)
+        self._leela_engine = chess.engine.SimpleEngine.popen_uci(LEELA_PATH)
+
+    def search(self, board: chess.Board, *args: HOMEMADE_ARGS_TYPE) -> PlayResult:
+        return self._leela_engine.play(board, chess.engine.Limit(time=0.1))
 
 
 # Bot names and ideas from tom7's excellent eloWorld video
