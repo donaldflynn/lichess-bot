@@ -47,18 +47,27 @@ class Hybrid(ExampleEngine):
 
     def search(self, board: chess.Board, time_limit: Limit, game: model.Game, *args: HOMEMADE_ARGS_TYPE) -> PlayResult:
         time_manager = TimeManager(board, game)
+
         decide_time = time_manager.get_initial_time()
         logger.info("Using time: %s to search for a move", decide_time)
         play_result = self.get_move(board, decide_time=decide_time)
+
+        pause_time = time_manager.get_pause_time(play_result.move)
+        logger.info(f"Waiting {pause_time} seconds before playing move {play_result.move}")
         time.sleep(time_manager.get_pause_time(play_result.move))
+
         return play_result
 
     def get_move(self, board: chess.Board, decide_time: float) -> PlayResult:
         stockfish_time = 0.1
         maia_time = decide_time - stockfish_time
+
+        # Gets candidate moves from maia
         info_list = self._leela_engine.analyse(board, chess.engine.Limit(time=maia_time), multipv=MAIA_CANDIDATE_MOVES)
         moves_list = [info['pv'][0] for info in info_list]
         logger.info("Candidate moves received from maia: " + ", ".join([str(move) for move in moves_list]))
+
+        # Use small-time Stockfish evaluation to determine the final move
         play_result = self._stockfish_engine.play(board, chess.engine.Limit(time=stockfish_time), root_moves=moves_list)
         logger.info("Final move decided from stockfish: %s", str(play_result.move))
         return play_result
