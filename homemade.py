@@ -45,8 +45,8 @@ class Hybrid(ExampleEngine):
         self._stockfish_engine.__exit__(exc_type, exc_val, exc_tb)
         super(Hybrid, self).__exit__(exc_type, exc_val, exc_tb)
 
-    def search(self, board: chess.Board, time_limit: Limit, game: model.Game, *args: HOMEMADE_ARGS_TYPE) -> PlayResult:
-        time_manager = TimeManager(board, game)
+    def search(self, board: chess.Board, time_limit: Limit, *args: HOMEMADE_ARGS_TYPE, game_info: model.Game) -> PlayResult:
+        time_manager = TimeManager(board, game_info)
 
         decide_time = time_manager.get_initial_time()
         logger.info("Using time: %s to search for a move", decide_time)
@@ -54,7 +54,7 @@ class Hybrid(ExampleEngine):
 
         pause_time = time_manager.get_pause_time(play_result.move)
         logger.info(f"Waiting {pause_time} seconds before playing move {play_result.move}")
-        time.sleep(time_manager.get_pause_time(play_result.move))
+        time.sleep(pause_time)
 
         return play_result
 

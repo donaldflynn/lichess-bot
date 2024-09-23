@@ -178,7 +178,7 @@ class EngineWrapper:
                                                is_correspondence, correspondence_move_time)
 
             try:
-                best_move = self.search(board, time_limit, can_ponder, draw_offered, best_move, game=game)
+                best_move = self.search(board, time_limit, can_ponder, draw_offered, best_move, game_info=game)
             except chess.engine.EngineError as error:
                 BadMove = (chess.IllegalMoveError, chess.InvalidMoveError)
                 if any(isinstance(e, BadMove) for e in error.args):
@@ -242,7 +242,7 @@ class EngineWrapper:
         return result
 
     def search(self, board: chess.Board, time_limit: chess.engine.Limit, ponder: bool, draw_offered: bool,
-               root_moves: MOVE, game: model.Game) -> chess.engine.PlayResult:
+               root_moves: MOVE, game_info: model.Game) -> chess.engine.PlayResult:
         """
         Tell the engine to search.
 

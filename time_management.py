@@ -37,15 +37,20 @@ class TimeManager:
     def get_pause_time(self, move: chess.Move) -> float:
         """Returns fake thinking time after making the move"""
         my_time, my_inc = self.game_state.time_left
+        if self.game_state.move_number < 10:
+            return 0
         if my_time < 10:
-            result = 0
+            return 0
+        if self.game_state.is_recapture(move):
+            return 0
+
         elif 10 <= my_time < 60:
-            result = random.uniform(0, self._get_complexity_measure())
+            return random.uniform(0, self._get_complexity_measure())
         elif my_time >= 60:
             # https://www.desmos.com/calculator/f5cgemje2s
             # Random weight between 0 and 1 weighted towards the bottom, but with a long tail
-            rand_weight = min(random.lognormvariate(-1, 1), 1)
-            return rand_weight * 30 * self._get_complexity_measure()
+            rand_weight = min(random.lognormvariate(-1, 5), 1)
+            return rand_weight * 15 * self._get_complexity_measure()
 
     def _get_complexity_measure(self) -> float:
         """Returns a value between 0 and 1 corresponding roughly to how complex the game is"""
@@ -138,4 +143,8 @@ class _GameState:
     @property
     def is_first_move(self):
         return self.board.move_stack == []
+
+    @property
+    def move_number(self):
+        return self.board.fullmove_number
 
